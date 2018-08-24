@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <script   src="https://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        $(function(){
+            var socket = io();
+            $('#sendUsernameForm').submit(function () {
+               socket.emit('username', $('#username').val());
+                $('#usernameContainer').hide();
+                $('#messagingContainer').show();
+                return false;
+            });
+            $('#sendMessageForm').submit(function(){
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+            });
+            socket.on('chat message', function(msg){
+                $('#messages').append($('<li>').text(msg));
+            });
+        });
+    </script>
+    <title>Socket.IO chat</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font: 13px Helvetica, Arial; }
+        form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+        form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+        form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+        #messages { list-style-type: none; margin: 0; padding: 0; }
+        #messages li { padding: 5px 10px; }
+        #messages li:nth-child(odd) { background: #eee; }
+    </style>
+</head>
+<body>
+<div id='messagingContainer' style="display: none;">
+    <ul id="messages"></ul>
+    <form action="" id="sendMessageForm">
+        <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+</div>
+<div id="usernameContainer">
+    <form action="" id="sendUsernameForm">
+        <label for="username">Username: </label><input type="text" id="username" name="username">
+        <input type="submit" value="Start">
+    </form>
+</div>
+</body>
+</html>
