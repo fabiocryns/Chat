@@ -1,7 +1,12 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require ('socket.io')(http);
 var users = [];
+
+//local files
+app.use("/assets", express.static(__dirname + '/assets'));
+
 //index.html
 app.get('/', function(req, res){
     res.sendFile(__dirname + '/index.html');
